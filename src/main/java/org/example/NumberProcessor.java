@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 public class NumberProcessor {
-
+    //
     private BigInteger[] numbers;
 
     public NumberProcessor(String path) {
@@ -25,6 +25,8 @@ public class NumberProcessor {
 
     public BigInteger _min() {
         return Arrays.stream(numbers).min(BigInteger::compareTo).orElse(BigInteger.ZERO);
+
+
     }
 
     public BigInteger _max() {
@@ -33,6 +35,9 @@ public class NumberProcessor {
 
     public BigInteger _sum() {
         return Arrays.stream(numbers).reduce(BigInteger.ZERO, BigInteger::add);
+
+
+
     }
 
     public BigInteger _mult() {
