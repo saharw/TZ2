@@ -33,6 +33,8 @@ jobs:
         echo "Test failures detected. Generating report..."
         mkdir -p test-reports
         mv target/surefire-reports/*.xml test-reports/
+        TEST_FAILURES=$(grep -E -o '<<< FAILURE! - in .+' target/surefire-reports/*.txt | sed 's/<<< FAILURE! - in //g')
+        echo "::set-output name=test_failures::$TEST_FAILURES"
 
     - name: Send success message to Telegram
       if: success()
@@ -50,4 +52,4 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
           Тесты не пройдены. Непройденные тесты:
-          $(grep -E -o '<<< FAILURE! - in .+' target/surefire-reports/*.txt | sed 's/<<< FAILURE! - in //g')
+          ${{ steps.generate_test_report.outputs.test_failures }}
