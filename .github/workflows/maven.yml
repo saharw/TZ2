@@ -33,14 +33,7 @@ jobs:
       run: |
         echo "Test failures detected. Generating report..."
         mkdir -p test-reports
-        mv target/surefire-reports/*.xml test-reports/
-        grep -E -o '<<< FAILURE! .+ \(.+\)' target/surefire-reports/*.txt | sed 's/<<< FAILURE! //g' > test-failures.txt
-        cat test-failures.txt
-
-    - name: Read Test Failures
-      if: failure()
-      id: read-failures
-      run: echo "TEST_FAILURES=$(cat test-failures.txt)" >> $GITHUB_ENV
+        cp target/surefire-reports/*.xml test-reports/
 
     - name: Send success message to Telegram
       if: success()
@@ -48,14 +41,19 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: "Все ок"
-
+        message: "Все окей"
+        
+    - name: Make failed test report
+      if: failure()
+      run: |
+          set +e
+          grep -E "<testcase|<failure" test-reports/*.xml | grep -B 1 "<failure" > report.xml
+    
     - name: Send failure message to Telegram
       if: failure()
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          Тесты не пройдены. Непройденные тесты:
-          ${{ env.TEST_FAILURES }}
+        message: "Тесты не пройдены. Непройденные тесты:"
+        document: report.xml
