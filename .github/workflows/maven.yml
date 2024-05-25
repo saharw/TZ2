@@ -35,13 +35,12 @@ jobs:
         mkdir -p test-reports
         mv target/surefire-reports/*.xml test-reports/
         grep -E -o '<<< FAILURE! .+ \(.+\)' target/surefire-reports/*.txt | sed 's/<<< FAILURE! //g' > test-failures.txt
+        cat test-failures.txt
 
     - name: Read Test Failures
       if: failure()
       id: read-failures
-      run: |
-        TEST_FAILURES=$(cat test-failures.txt)
-        echo "::set-output name=test_failures::$TEST_FAILURES"
+      run: echo "TEST_FAILURES=$(cat test-failures.txt)" >> $GITHUB_ENV
 
     - name: Send success message to Telegram
       if: success()
@@ -59,4 +58,4 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
           Тесты не пройдены. Непройденные тесты:
-          ${{ steps.read-failures.outputs.test_failures }}
+          ${{ env.TEST_FAILURES }}
