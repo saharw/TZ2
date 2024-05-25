@@ -45,7 +45,7 @@ public class NumberProcessorTest {
     @Test
     public void testMax() {
         NumberProcessor test = new NumberProcessor(TEST_FILE);
-        assertEquals(new BigInteger("4"), test._max());
+        assertEquals(new BigInteger("5"), test._max());
     }
 
     @Test
