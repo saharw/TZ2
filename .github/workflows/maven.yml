@@ -34,7 +34,7 @@ jobs:
         echo "Test failures detected. Generating report..."
         mkdir -p test-reports
         mv target/surefire-reports/*.xml test-reports/
-        grep -E -o '<<< FAILURE! - in .+' target/surefire-reports/*.txt | sed 's/<<< FAILURE! - in //g' > test-failures.txt
+        grep -E -o '<<< FAILURE! .+ \(.+\)' target/surefire-reports/*.txt | sed 's/<<< FAILURE! //g' > test-failures.txt
 
     - name: Read Test Failures
       if: failure()
