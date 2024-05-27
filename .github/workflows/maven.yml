@@ -41,13 +41,9 @@ jobs:
       run: |
         mkdir -p test-reports
         cp target/surefire-reports/*.xml test-reports/
-
+        set +e
+        grep -E "<testcase|<failure" test-reports/*.xml | grep -B 1 "<failure" > report.xml
     
-    - name: Make failed test report
-      if: failure()
-      run: |
-          set +e
-          grep -E "<testcase|<failure" test-reports/*.xml | grep -B 1 "<failure" > report.xml
     
     - name: Send failure message to Telegram
       if: failure()
