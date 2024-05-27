@@ -28,14 +28,7 @@ jobs:
       run: mvn test --file pom.xml
       continue-on-error: true
 
-    - name: Generate Test Report
-      if: failure()
-      run: |
-        echo "Test failures detected. Generating report..."
-        mkdir -p test-reports
-        cp target/surefire-reports/*.xml test-reports/
-
-    - name: Send success message to Telegram
+    - name: Success message
       if: success()
       uses: appleboy/telegram-action@master
       with:
@@ -43,6 +36,13 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: "Все окей"
         
+    - name: Test Report
+      if: failure()
+      run: |
+        mkdir -p test-reports
+        cp target/surefire-reports/*.xml test-reports/
+
+    
     - name: Make failed test report
       if: failure()
       run: |
