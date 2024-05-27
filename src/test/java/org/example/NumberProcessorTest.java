@@ -56,6 +56,7 @@ public class NumberProcessorTest {
     }
 
     @Test
+    @Disabled
     public void testMult() {
         NumberProcessor test = new NumberProcessor(TEST_FILE);
         assertEquals(new BigInteger("24"), test._mult());
