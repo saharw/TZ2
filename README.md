@@ -26,7 +26,9 @@
   - `_mult()`: Возвращает произведение всех чисел в массиве.
   
 ![execution_time_graph](https://github.com/saharw/TZ2/assets/82721573/2e199a63-781a-4688-a624-582b68556f7c)
+Итоговая асимптотика:
 
+Методы _min(), _max(), _sum(): **O(N)**
 ### Класс NumberProcessorTest
 
 - **Подготовка данных**: 
