@@ -43,6 +43,27 @@ public class NumberProcessor {
     public BigInteger _mult() {
         return Arrays.stream(numbers).reduce(BigInteger.ONE, BigInteger::multiply);
     }
+    public void testAveragePerformance() {
+        int[] sizes = {10, 100, 1000,10000, 100000, 1000000};
+        for (int size : sizes) {
+            String fileName = "example_" + size + ".txt";
+            double totalDuration = 0;
 
+            for (int i = 0; i < 100; i++) {
+                long startTime = System.nanoTime();
+                NumberProcessor test = new NumberProcessor(fileName);
+                test._max();
+                test._min();
+                test._sum();
+
+                long endTime = System.nanoTime();
+                double duration = (endTime - startTime) / 1000000.0  ; // в миллисекундах
+                totalDuration += duration;
+            }
+
+            double averageDuration = Math.round(totalDuration) / 100.0;
+            System.out.println("Среднее время выполнения для файла размером " + size + ": " + averageDuration + " миллисекунд");
+        }
+    }
 
 }

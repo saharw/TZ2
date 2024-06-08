@@ -4,18 +4,29 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
 
-import org.junit.jupiter.api.AfterAll;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.Disabled;
+import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NumberProcessorTest {
+    public static void createFile(String name, String data) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name))) {
+            writer.write(data);
+        }
+    }
 
+    public static void createBigFile(String name, int size) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name))) {
+            for (int i = 1; i <= size; i++) {
+                writer.write(i + " ");
+            }
+        }
+    }
     private static final String TEST_FILE = "example.txt";
     private static final String LARGE_TEST_FILE = "example1.txt";
 
@@ -46,7 +57,7 @@ public class NumberProcessorTest {
     @Test
     public void testMax() {
         NumberProcessor test = new NumberProcessor(TEST_FILE);
-        assertEquals(new BigInteger("5"), test._max());
+        assertEquals(new BigInteger("4"), test._max());
     }
 
     @Test
@@ -56,7 +67,6 @@ public class NumberProcessorTest {
     }
 
     @Test
-    @Disabled
     public void testMult() {
         NumberProcessor test = new NumberProcessor(TEST_FILE);
         assertEquals(new BigInteger("24"), test._mult());
@@ -82,44 +92,18 @@ public class NumberProcessorTest {
                 .divide(BigInteger.valueOf(2));
         assertEquals(expectedSum, test._sum());
     }
-    @Test
-    public void testAveragePerformance() {
-        int[] sizes = {10, 100, 1000,10000, 100000, 1000000};
-        for (int size : sizes) {
-            String fileName = "example_" + size + ".txt";
-            double totalDuration = 0;
-
-            for (int i = 0; i < 100; i++) {
-                long startTime = System.nanoTime();
-                NumberProcessor test = new NumberProcessor(fileName);
-                test._max();
-                test._min();
-                test._sum();
-
-                long endTime = System.nanoTime();
-                double duration = (endTime - startTime) / 1000000.0  ; // в миллисекундах
-                totalDuration += duration;
-            }
-
-            double averageDuration = Math.round(totalDuration) / 100.0;
-            System.out.println("Среднее время выполнения для файла размером " + size + ": " + averageDuration + " миллисекунд");
+    @Timeout(value = 300, unit = TimeUnit.MILLISECONDS)
+        @Test
+        @Disabled
+        void timeCheck() throws InterruptedException {
+            Thread.sleep(300);
         }
-    }
-
-
-
-
-    public static void createFile(String name, String data) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name))) {
-            writer.write(data);
-        }
-    }
-
-    public static void createBigFile(String name, int size) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(name))) {
-            for (int i = 1; i <= size; i++) {
-                writer.write(i + " ");
-            }
-        }
-    }
 }
+
+
+
+
+
+
+
+
